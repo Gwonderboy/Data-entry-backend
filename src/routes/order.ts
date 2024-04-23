@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
-import Order from "../../models/order";
+import Order from "../models/order";
+import { createOrder } from "../controllers/order";
 
 const router = express.Router();
 
@@ -12,5 +13,7 @@ router.get("/number-of-orders", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+router.post("/create", createOrder)
 
 export default router;

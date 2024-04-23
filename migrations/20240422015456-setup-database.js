@@ -1,27 +1,30 @@
-'use strict';
-const { QueryInterface } = require('sequelize');
-const productCategories = ['Electronics', 'Clothing', 'Books', 'Home & Garden', 'Health & Beauty'];
+"use strict";
+const { QueryInterface } = require("sequelize");
+const { DataTypes } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
+
+const productCategories = [
+  "Electronics",
+  "Clothing",
+  "Books",
+  "Home & Garden",
+  "Health & Beauty",
+];
 
 module.exports = {
-  // Migration to set up tables and insert product categories
   up: async (queryInterface, Sequelize) => {
-    // Create tables
-    await queryInterface.createTable('Orders', {
+    await queryInterface.createTable("Orders", {
       id: {
-        type: Sequelize.STRING,
+        type: DataTypes.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
       },
       customerId: {
-        type: Sequelize.STRING,
+        type: DataTypes.UUID,
         allowNull: false,
-        // references: {
-        //   model: 'Customers',
-        //   key: 'id',
-        // },
       },
       productId: {
-        type: Sequelize.STRING,
+        type: DataTypes.UUID,
         allowNull: false,
       },
       quantity: {
@@ -46,11 +49,11 @@ module.exports = {
       },
     });
 
-    await queryInterface.createTable('Customers', {
+    await queryInterface.createTable("Customers", {
       id: {
-        type: Sequelize.STRING,
+        type: DataTypes.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
       },
       name: {
         type: Sequelize.STRING,
@@ -79,11 +82,11 @@ module.exports = {
       },
     });
 
-    await queryInterface.createTable('ProductCategories', {
+    await queryInterface.createTable("ProductCategories", {
       id: {
-        type: Sequelize.STRING,
+        type: DataTypes.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
       },
       name: {
         type: Sequelize.STRING,
@@ -99,15 +102,20 @@ module.exports = {
       },
     });
 
-    // Insert product categories
-    await queryInterface.bulkInsert('ProductCategories', productCategories.map(name => ({ name, createdAt: new Date(), updatedAt: new Date() })));
+    await queryInterface.bulkInsert(
+      "ProductCategories",
+      productCategories.map((name) => ({
+        id: uuidv4(),
+        name,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }))
+    );
   },
 
-  // Rollback migration
   down: async (queryInterface, Sequelize) => {
-    // Drop tables
-    await queryInterface.dropTable('Orders');
-    await queryInterface.dropTable('Customers');
-    await queryInterface.dropTable('ProductCategories');
+    await queryInterface.dropTable("Orders");
+    await queryInterface.dropTable("Customers");
+    await queryInterface.dropTable("ProductCategories");
   },
 };
